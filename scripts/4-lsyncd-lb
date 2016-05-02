@@ -1,0 +1,29 @@
+settings {
+   logfile = "/var/log/lsyncd/lsyncd.log",
+   statusFile = "/var/log/lsyncd/lsyncd-status.log",
+   statusInterval = 20
+}
+
+sync {
+    default.rsync,
+    delay = 0,
+    source="/var/cache/nginx/cache",
+    target="nginx@wordpressサーバ1のIPアドレス:/var/cache/nginx/cache/",
+    rsync = {
+        rsh = "/usr/bin/ssh -i /var/cache/nginx/.ssh/emptypass -o StrictHostKeyChecking=no"
+    },
+    delete = "running",
+    init  = false
+}
+
+sync {
+    default.rsync,
+    delay = 0,
+    source="/var/cache/nginx/cache",
+    target="nginx@wordpressサーバ2のIPアドレス:/var/cache/nginx/cache/",
+    rsync = {
+        rsh = "/usr/bin/ssh -i /var/cache/nginx/.ssh/emptypass -o StrictHostKeyChecking=no"
+    },
+    delete = "running",
+    init  = false,
+}
