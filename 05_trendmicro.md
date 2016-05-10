@@ -1,0 +1,1 @@
+See [05_ガイド_SoftLayerハンズオンセミナー_trendmicro編_v0.9.docx](https://github.com/kkitase/softlayer-handson/blob/master/doc/05_%E3%82%AC%E3%82%A4%E3%83%89_SoftLayer%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3%E3%82%BB%E3%83%9F%E3%83%8A%E3%83%BC_trendmicro%E7%B7%A8_v0.9.docx)
