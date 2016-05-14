@@ -1,7 +1,7 @@
 # 更新点
 
 # 20160514
-# Wordpress編
+## Wordpress編
 - Provisioning Scriptの場所の変更
 - 5 VMを一度に作るように変更
 
