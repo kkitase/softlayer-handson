@@ -149,6 +149,9 @@ Provisioning Scriptは注文確定画面最終段階で設定可能です。URL1
 - Reverse Proxyサーバ
 - ロードバランサ
 
+これから仮想サーバーを5台作成しますが、下記の要領でまとめてオーダーしたほうが便利です。
+![](images/wordpress/image91.png)
+
 ## Zabbixサーバのセットアップ
 
 管理ポータルより、下記スペックの時間課金仮想インスタンス（Virtual Server (public node) - Hourly）を作成してください。
@@ -161,7 +164,7 @@ Provisioning Scriptは注文確定画面最終段階で設定可能です。URL1
 |Hardware & Software Firewall|None                                                                                     |
 |Monitoring                  |Host Ping                                                                                |
 |Response                    |Automated Notification                                                                   |
-|Provisioning Scripts        |https://shiro.ma/sl/zabbix.sh                                                                                |
+|Provisioning Scripts        |https://raw.githubusercontent.com/kkitase/softlayer-handson/master/scripts/4-zabbix.sh   |
 |SSH Key|登録したSSH Keyのラベルを選択 例: student1031|
 |Host Name                   |ご自身のアカウントを利用している方: 任意<br>IBM から貸与したアカウントを利用している方: アカウント名-zabbix|
 |Domain Name                 |ご自身のアカウントを利用している方: 任意<br>IBM から貸与したアカウントを利用している方: handson.jp  |
@@ -208,7 +211,7 @@ Zabbixサーバのセットアップは以上で完了です。引き続き他�
 |Hardware & Software Firewall|None                                                                                     |
 |Monitoring                  |Host Ping                                                                                |
 |Response                    |Automated Notification                                                                   |
-|Provisioning Scripts        |https://shiro.ma/sl/db.sh                                                                                |
+|Provisioning Scripts        |https://raw.githubusercontent.com/kkitase/softlayer-handson/master/scripts/4-db.sh       |
 |SSH Key|登録したSSH Keyのラベルを選択 例: student1031|
 |Host Name                   |ご自身のアカウントを利用している方: 任意<br>IBM から貸与したアカウントを利用している方: アカウント名-db|
 |Domain Name                 |ご自身のアカウントを利用している方: 任意<br>IBM から貸与したアカウントを利用している方: handson.jp  |
@@ -270,7 +273,7 @@ mysql>select Host, User, Password from mysql.user;
 |Hardware & Software Firewall|None                                                                                     |
 |Monitoring                  |Host Ping                                                                                |
 |Response                    |Automated Notification                                                                   |
-|Provisioning Scripts        |https://shiro.ma/sl/backweb_nginx.sh                                                                                |
+|Provisioning Scripts        |https://raw.githubusercontent.com/kkitase/softlayer-handson/master/scripts/4-wp-nginx.sh |
 |SSH Key|登録したSSH Keyのラベルを選択 例: student1031|
 |Host Name                   |ご自身のアカウントを利用している方: 任意<br>IBM から貸与したアカウントを利用している方: アカウント名-wordpress1|
 |Domain Name                 |ご自身のアカウントを利用している方: 任意<br>IBM から貸与したアカウントを利用している方: handson.jp  |
@@ -410,7 +413,7 @@ define('UPLOADS', '/wp-content/uploads/コンテナ名 例: student1031-sjc01-co
 |Hardware & Software Firewall|None                                                                                     |
 |Monitoring                  |Host Ping                                                                                |
 |Response                    |Automated Notification                                                                   |
-|Provisioning Scripts        |https://shiro.ma/sl/frontweb.sh                                                                                |
+|Provisioning Scripts        |https://raw.githubusercontent.com/kkitase/softlayer-handson/master/scripts/4-lb.sh       |
 |SSH Key|登録したSSH Keyのラベルを選択 例: student1031|
 |Host Name                   |ご自身のアカウントを利用している方: 任意<br>IBM から貸与したアカウントを利用している方: アカウント名-lb|
 |Domain Name                 |ご自身のアカウントを利用している方: 任意<br>IBM から貸与したアカウントを利用している方: handson.jp  |
