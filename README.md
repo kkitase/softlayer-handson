@@ -1,7 +1,9 @@
 # MarkdownのPDF化
-- sudo pip install grip
-- grip sample.md
-- ChromeでPDF化して保存
+'''
+sudo pip install grip
+grip sample.md
+'''
+あとは、ChromeでPDF化して保存
 
 # 更新点
 
