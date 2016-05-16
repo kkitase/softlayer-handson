@@ -1,3 +1,8 @@
+# MarkdownのPDF化
+- sudo pip install grip
+- grip sample.md
+- ChromeでPDF化して保存
+
 # 更新点
 
 ## 20160514 (kkitase)
