@@ -5,6 +5,8 @@ sed -i.org -e "s/PasswordAuthentication yes/PasswordAuthentication no/g" /etc/ss
 sed -i.org -e "s/#PubkeyAuthentication/PubkeyAuthentication/g" /etc/ssh/sshd_config
 sed -i.org -e "s/#RSAAuthentication/RSAAuthentication/g" /etc/ssh/sshd_config
 
+service sshd restart
+
 # change timezone
 rm -f /etc/localtime
 ln -s /usr/share/zoneinfo/Asia/Tokyo /etc/localtime

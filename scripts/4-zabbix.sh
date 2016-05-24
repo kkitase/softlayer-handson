@@ -5,6 +5,8 @@ sed -i.org -e "s/PasswordAuthentication yes/PasswordAuthentication no/g" /etc/ss
 sed -i.org -e "s/#PubkeyAuthentication/PubkeyAuthentication/g" /etc/ssh/sshd_config
 sed -i.org -e "s/#RSAAuthentication/RSAAuthentication/g" /etc/ssh/sshd_config
 
+service sshd restart
+
 # change timezone
 rm -f /etc/localtime
 ln -s /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
@@ -30,7 +32,9 @@ yum -y install zabbix-agent zabbix-get
 
 # install zabbix server
 yum -y install zabbix-server-mysql zabbix-web-mysql
-cd /usr/share/doc/zabbix-server-mysql-2.4.7/create
+
+ZSMPATH=$(rpm -ql zabbix-server-mysql | grep zabbix-server-mysql | head -n 1)
+cd ${ZSMPATH}/create
 mysql -e 'create database zabbix;' -uroot
 mysql -uroot zabbix < schema.sql
 mysql -uroot zabbix < images.sql
@@ -54,6 +58,8 @@ chkconfig zabbix-server on
 iptables -F INPUT
 iptables -F OUTPUT
 iptables -F FORWARD
+
+iptables -P INPUT DROP
 
 iptables -A INPUT -i lo -j ACCEPT
 iptables -A OUTPUT -o lo -j ACCEPT

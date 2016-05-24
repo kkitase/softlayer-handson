@@ -23,7 +23,7 @@
 
 
 ## ハンズオンの概要
-- 本ハンズオンでは、Provisioning Scriptを利用したWordPressサーバの自動展開、およびSendGridを利用したメールサービスを展開します。Provisioning Scriptを利用することで、コンテンツをキャッシュするリバースプロキシと負荷を分散するロードバランサを組み合わせたスケーラブルなWordPress環境を、自動で構築することができます。
+- 本ハンズオンでは、Provisioning Scriptを利用したWordPressサーバの自動展開を行います。Provisioning Scriptを利用することで、コンテンツをキャッシュするリバースプロキシと負荷を分散するロードバランサを組み合わせたスケーラブルなWordPress環境を、自動で構築することができます。
 
 - 本ハンズオンでは複数の仮想インスタンスを注文し利用します。既にSoftLayerをご利用で複数VLANセグメントをお持ちの場合は、注文の際に所属するVLANを明示的に指定して全てのVMが同じVLANに所属していることを確認して下さい。
 
@@ -32,6 +32,12 @@
 
 
 ## 仮想インスタンスの準備
+
+![](images/wordpress/image39.png)
+
+本ハンズオンでは，最初に踏み台サーバをデプロイし，踏み台サーバを経由してWordpressを構成するサーバ群に接続します．Wordpressを構成するサーバ群はセットアップ時に自動でログイン用の鍵が設定されるため，踏み台サーバ以外から接続されることはなくセキュリティが向上します．
+
+
 > SoftLayer上で下記スペックの時間課金仮想インスタンス（Virtual Server (public node) - Hourly）を構築し、SSHでの接続と操作が可能であることを確認してください。
 
 |項目名                      |パラメータ                                                                               |
@@ -150,7 +156,7 @@ Provisioning Scriptは注文確定画面最終段階で設定可能です。URL1
 - ロードバランサ
 
 これから仮想サーバーを5台作成しますが、下記の要領でまとめてオーダーしたほうが便利です。
-![](images/wordpress/image91.png)
+![](images/wordpress/image40.png)
 
 ## Zabbixサーバのセットアップ
 
@@ -189,7 +195,7 @@ Provisioning Scriptでセットアップを行った場合は、すぐにZabbix�
 ![](images/wordpress/image8.5-2.png)
 
 
-インストールウィザードが終了したら、ログイン画面が表示されます。デフォルトのパスワードはAdmin/zabbixです。早速ログインしてみましょう。
+インストールウィザードが終了したら、ログイン画面が表示されます。デフォルトのユーザー名はAdmin，パスワードはzabbixです。早速ログインしてみましょう。
 
 ![](images/wordpress/image9.png)
 
@@ -242,7 +248,7 @@ zabbix-agent.x86_64   2.4.5-1.el6       @zabbix
 zabbix-get.x86_64     2.4.5-1.el6       @zabbix
 zabbix-release.noarch 2.4-1.el6         installed
 
-[root@db ~]# mysql -u root -p
+[root@db ~]# mysql -u root
 Enter password: [Enter]
 Welcome to the MySQL monitor.  Commands end with ; or \g.
 (中略)
@@ -577,7 +583,7 @@ The key's randomart image is:
 ```
 同様の設定をWordPressサーバ1と2でも行ってください。
 
-最後に、lsyncdの設定ファイルを編集し、同期を行います。ロードバランサーは配下のWordPressサーバ1と2の両方と動機する設定を、WordPressノードはロードバランサーノードとのみ同期する設定を行います。まずはロードバランサーノードの設定です。
+最後に、lsyncdの設定ファイルを編集し、同期を行います。ロードバランサーは配下のWordPressサーバ1と2の両方と同期する設定を、WordPressノードはロードバランサーノードとのみ同期する設定を行います。まずはロードバランサーノードの設定です。
 
 **[COMMAND]**
 
