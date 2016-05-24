@@ -1,5 +1,6 @@
 # SoftLayerハンズオン WordPress編
-## 諸注意
+# 1. はじめに
+## 1.1 諸注意
 
 
 - SoftLayerのアカウントは、事前取得していることを前提にしています。次の「SoftLayer 無料トライアルのご案内」を参照してください。
@@ -22,7 +23,7 @@
 - **[COMMAND]**の記述がある部分は、実際にコマンド等の入力作業を行う箇所です。資料の内容を参考に、サーバにコマンドを入力してください。
 
 
-## ハンズオンの概要
+## 1.2 ハンズオンの概要
 - 本ハンズオンでは、Provisioning Scriptを利用したWordPressサーバの自動展開を行います。Provisioning Scriptを利用することで、コンテンツをキャッシュするリバースプロキシと負荷を分散するロードバランサを組み合わせたスケーラブルなWordPress環境を、自動で構築することができます。
 
 - 本ハンズオンでは複数の仮想インスタンスを注文し利用します。既にSoftLayerをご利用で複数VLANセグメントをお持ちの場合は、注文の際に所属するVLANを明示的に指定して全てのVMが同じVLANに所属していることを確認して下さい。
@@ -31,7 +32,8 @@
 ![](images/wordpress/image2.png)
 
 
-## 仮想インスタンスの準備
+# 2. ハンズオンの準備
+## 2.1 踏み台サーバの展開
 
 ![](images/wordpress/image39.png)
 
@@ -55,10 +57,10 @@
 - 他はデフォルト設定、講師から何か指定がある場合はそちらに従ってください。
 - 仮想インスタンスの構築方法がわからない場合は、「SoftLayerハンズオン初級編ガイド」を参考にしてください。本ハンズオンではこの仮想インスタンスを利用しますので、必ず構築ください。以降、この仮想インスタンスのことを作業マシンと呼びます。本ハンズオンでは、特に指定がない限りは全て上記スペックの仮想インスタンスを用いるものとします。
 
-# SSH鍵の自動展開
+## 2.2 SSH鍵の自動展開
 SoftLayerでは、管理ポータルにSSHの公開鍵を事前に登録しておき、サーバのデプロイ時に指定した公開鍵を自動で組み込む機能が存在しています。後述のProvisioning Scriptと組み合わせることで、デプロイ時点でSSHのパスワード認証を禁止して鍵交換方式に限定することができるため、セキュリティが向上します。
 
-## SSH鍵の生成
+### 2.2.1 SSH鍵の生成
 
 まずは作業マシン上でSSHの鍵ペアを作成します。同じパスワードを適切に二回入力すると、秘密鍵(id_rsa)と公開鍵(id_rsa.pub)のペアが作成されます。それぞれの鍵ファイルは名前の通り、公開鍵は他人に公開する為の鍵、秘密鍵は厳重に管理し認証に用いる鍵となります。
 
@@ -116,12 +118,12 @@ SSH鍵の管理メニューが表示されたら、右上のAddをクリック�
 
 これでSSH公開鍵の登録は完了です。次の注文時から、マシンの注文時に指定することで登録した公開鍵を含んだ状態でデプロイすることが可能です。
 
-## SSH鍵のインスタンスへの登録方法
+### 2.2.2 SSH鍵のインスタンスへの登録方法
 物理、仮想問わず、SSH鍵のインスタンスへの登録は、注文時にしか行えません。上で登録した鍵は、インスタンス注文の最終段階においてSSH Keysという項目で選択可能です。
 
 ![](images/wordpress/image6.png)
 
-# Provisioning Script
+## 2.3 Provisioning Script
 SoftLayerには、Provisioning Scriptと呼ばれるデプロイ自動化の仕組みが存在しています。この仕組は、インスタンスの注文時のデプロイ最終段階において、ユーザーが指定したスクリプトを自動で実行するものです。
 
 > 注文したインスタンスでProvisioning Scriptを自動実行するためには、HTTPSでスクリプトを取得する必要があります。Provisioning ScriptにHTTPのURLを指定した場合、自動実行は行われずスクリプトのダウンロードに留まります。
@@ -130,17 +132,17 @@ Provisioning Scriptは基本的にはシェルスクリプトなので、手元�
 
 本ハンズオンでは、図におけるReverse Proxy、WordPress Server、MySQL Server、そしてZabbix Monitoringの4つの役割に対して、それぞれ必要なソフトウェアの導入と設定の大部分を行うよう作成されたProvisioning Scriptを用いることでProvisioning Scriptの力強さを体験します。
 
-## Provisioning Scriptの利用方法
+### 2.3.1 Provisioning Scriptの利用方法
 Provisioning Scriptは注文確定画面最終段階で設定可能です。URL1に自動で実行させたいProvisioning Scriptを指定することで、インストール時にそれらのスクリプトを自動で実行させることができます。
 
 ![](images/wordpress/image7.png)
 
-# VLAN Spanning
+## 2.4 VLAN Spanning
 複数のPrivate VLANとの通信を有効にする為に、VLAN Spanningの設定を行います。管理ポータルから、Network – IP Management – VLANsで、Spanタブをクリックし、VLAN Spanning: Onをチェックします。
 
 ![](images/wordpress/image8.png)
 
-# スケーラブルWordPressシステムの展開
+# 3. スケーラブルWordPressシステムの展開
 本章では、実際にProvisioning Scriptを活用しながらスケーラブルなWordPressシステムを構築します。本ハンズオンで構成するスケーラブルWordPress環境は、以下の通り複数の段階を踏んで負荷分散を行っています。
 
 - 上位で負荷分散を行うロードバランサー
@@ -158,7 +160,7 @@ Provisioning Scriptは注文確定画面最終段階で設定可能です。URL1
 これから仮想サーバーを5台作成しますが、下記の要領でまとめてオーダーしたほうが便利です。
 ![](images/wordpress/image40.png)
 
-## Zabbixサーバのセットアップ
+## 3.1 Zabbixサーバのセットアップ
 
 管理ポータルより、下記スペックの時間課金仮想インスタンス（Virtual Server (public node) - Hourly）を作成してください。
 
@@ -204,7 +206,7 @@ Provisioning Scriptでセットアップを行った場合は、すぐにZabbix�
 Zabbixサーバのセットアップは以上で完了です。引き続き他のノードをセットアップし、最後にそれらのノードをZabbixを追加し、自動で監視を行います。
 
 
-## バックエンドDBサーバ
+## 3.2 バックエンドDBサーバ
 次はバックエンドのDBサーバを構築します。本来DBサーバは多くのトランザクションへの対応が予想されるため、仮想インスタンスではなくベアメタルインスタンスを利用する事が多いですが、本ハンズオンでは仮想インスタンスで代用します。ベアメタルインスタンスでも同様にSSH鍵の自動登録やProvisioning Scriptを活用することができます。
 
 管理ポータルより、下記スペックの時間課金仮想インスタンス（Virtual Server (public node) - Hourly）を作成してください。
@@ -265,10 +267,10 @@ mysql>select Host, User, Password from mysql.user;
 ```
 
 
-## WordPressサーバ
+## 3.3 WordPressサーバ
 次はWordPressサーバのデプロイです。一般にWordPressのインストールには非常に複雑な手順を要しますが、Provisioning Scriptによりこれらの多くは自動で行われます。まずは一台目をインストールしましょう。
 
-### 一台目
+### 3.3.1 一台目
 管理ポータルより、下記スペックの時間課金仮想インスタンス（Virtual Server (public node) - Hourly）を作成してください。
 
 |項目名                      |パラメータ                                                                               |
@@ -306,7 +308,7 @@ define('DB_HOST', 'DBサーバのPrivate IP address');
 
 以上で追加設定は終了です。WordPressのセットアップに入りましょう。
 
-## WordPressのセットアップ
+#### 3.3.1.1  WordPressのセットアップ
 WordPressのセットアップは、ブラウザのウィザード越しに行います。ブラウザで以下のURLを開いてください。
 
 > http://WordPressサーバのPublic IPアドレス/
@@ -320,32 +322,32 @@ WordPressのセットアップは、ブラウザのウィザード越しに行�
 
 ![](images/wordpress/image12.png)
 
-### 二台目
+### 3.3.2 二台目
 二台目以降のWordPressノードのセットアップは非常に簡単です。二台目以降は、一台目と同じスペック、同じProvisioning Scriptを用いてデプロイし、一台目と同様に/etc/WordPress/wp-config.phpにDBサーバの設定を施せば、すぐにWordPressサーバとして稼働します。
 
-### SoftLayer Object Storageの設定
+### 3.3.3 SoftLayer Object Storageの設定
 標準の設定では、WordPressはアップロードした画像をローカルに保持します。しかし、複数のWordPressサーバを構築して負荷分散を行う場合はアプロードされた画像を各サーバ間で共有する必要があります。そこで、各WordPressサーバ間で、SoftLayerのObject Storageを介してアップロードされたコンテンツを共有します。まずは各サーバ群と同じデータセンターにObject Storageを注文して、利用できる様にしてください。
 
 > Object Storageの注文と利用に関しては、SoftLayerハンズオン ストレージ編の5章で詳解しています。併せてお読みください。<br>
 http://ibm.biz/slhandson22
 
-#### Object Storageのセットアップ
+#### 3.3.3.1 Object Storageのセットアップ
 管理ポータルから、Storage - Object Storageを選択してください。 アカウントの一覧が表示された後に、自動で Object Storage ユーザーの管理ポータルに遷移します。自動で遷移しない場合は、オブジェクトストレージのアカウント名の部分をクリックしてください。
 
-#### Locationの選択
+#### 3.3.3.2 Locationの選択
 Object Storage をデプロイ出来るデータセンター一覧が表示されます。本ハンズオンでは「San Jose 1..」を選択します。
 
-#### Credentialsの確認
+#### 3.3.3.3 Credentialsの確認
 管理ポータルから、Storage – Object Storage – Object Storageのアカウント名 – ロケーション (San Jose) で、 [View Credentials]をクリックすることで、オブジェクトストレージへアクセスする為の ユーザー名やパスワード、エンドポイントといった重要な情報を確認することができます。
 
 [Authentication Endpoint]のうち、Public:となっているエンドポイントはインターネット上ならどこからでも、 Private:となっているエンドポイントは SoftLayer のネットワーク内部からのみ利用することができます。
 
-#### CDNの有効化
+#### 3.3.3.4 CDNの有効化
 SoftLayer Object StorageはCDNと連携させることができます。必要に応じて、Enable　CDNをチェックし、CDNを有効にしてください。
 
 ![](images/wordpress/image13.png)
 
-#### Cloudfuseのインストール
+#### 3.3.3.5 Cloudfuseのインストール
 
 **以下の設定は、二台のWordPressサーバの両方で実行してください**
 
@@ -405,9 +407,9 @@ define('UPLOADS', '/wp-content/uploads/コンテナ名 例: student1031-sjc01-co
 ```
 
 
-## Load Balancer
-### Load Balancerの導入と設定
-#### Load Balancerのデプロイ
+## 3.4 Load Balancer
+### 3.4.1 Load Balancerの導入と設定
+#### 3.4.1.1 Load Balancerのデプロイ
 次は負荷分散機構のLoad Balancerをデプロイしてみましょう。Load balancerには新進気鋭のWebサーバ、Nginxを利用します。Nginxは負荷分散と同時に流通しているコンテンツをキャッシュできるため、更なる通信負荷の低減を見込むことができます。
 
 
@@ -513,7 +515,7 @@ upstream wpnode {
 
 ![](images/wordpress/image15.png)
 
-#### Nginx cache controllerの導入
+#### 3.4.1.2 Nginx cache controllerの導入
 コンテンツのキャッシュはサーバの応答速度の向上に非常に有用です。しかし、内容が更新されたにも関わらず古い内容がキャッシュとして残り続けるのは問題です。これを解決するために、WordPressにNginx cache controllerプラグインを導入します。このプラグインを導入することで、記事を更新した際に、リバースプロキシに対して古いキャッシュを破棄し内容を更新するよう指示することができます。
 
 Nginx cache controllerプラグインは既にインストールされているので、WordPressの管理メニューから有効化できます。管理メニューのPluginからNginx Cache ControllerのActivateをクリックしてください。
@@ -538,7 +540,7 @@ Cache Directoryを、前述で設定したproxy_cache_pathに変更します。
 
 最後に、Save Changesをクリックし、キャッシュ制御の設定は完了です。
 
-#### コンテンツキャッシュの同期設定
+#### 3.4.1.3 コンテンツキャッシュの同期設定
 Nginx Cache Controllerはコンテンツ更新時にキャッシュを制御できますが、このプラグインはWordPressサーバとリバースプロキシが同一のサーバで動作する環境を想定しているため、本ハンズオンのようにリバースプロキシとWordPressサーバを分離している環境では適切に動作しません。そこで、lsyncdを用いてフロントエンドのリバースプロキシとバックエンドのWordPressサーバ間でキャッシュファイルを同期し、WordPressサーバがNginx Cache Controllerを用いてリバースプロキシのキャッシュファイルを削除できるようにします。
 
 リバースプロキシ、WordPressサーバともにlsyncdのセットアップはProvisioning Script内で完了しています。通信に必要な鍵ファイルを適切に配置し、lsyncdの設定ファイルを用意して自動同期環境を構築しましょう。同期はNginxユーザーで行う必要があるため、権限を適切に設定する必要があります。自動で同期を行うために、作業用インスタンス上でパスワードを要求されない空の鍵ペアを作成し、ロードバランサーとWordPressノードの双方に配置します。
@@ -657,7 +659,7 @@ sync {
 
 以上でキャッシュファイルを同期するlsyncdの設定が完了しました。各サーバでlsyncdを起動すると、キャッシュファイルが同期されるようになります。
 
-## Zabbixサーバへの登録
+## 3.5 Zabbixサーバへの登録
 各サーバ上ではProvisioning Scriptで導入されたZabbixエージェントが起動しています。Zabbix監視サーバにこれらの子サーバ群を登録し、一括で監視できるよう設定を施しましょう。上部メニューのConfiguration→Hostsの順にクリックしましょう。
 
 ![](images/wordpress/image21.png)
@@ -678,17 +680,17 @@ sync {
 
 ![](images/wordpress/image25.png)
 
-# 最後に
+# 4. 最後に
 本ハンズオンで作成した、全ての仮想インスタンスとオブジェクトストレージを削除して終了してください。その他イメージなどを作成された方は、イメージなども削除してください。
 
 （本ハンズオンで利用した環境を、ハンズオン終了後も利用される方は、残しておいても問題ありませんが、課金されることをご理解いただければと思います）
 
-## 仮想インスタンスの削除
+## 4.1 仮想インスタンスの削除
 [Device] - [Device list] - 自分のサーバ - [Actions] - [Cancel Device]
 
 ![](images/wordpress/image26.png)
 
-## Object Storage内のファイルの削除
+## 4.2 Object Storage内のファイルの削除
 管理ポータルからは、ファイルの一括操作を行うことができないので、Webサーバーから、下記のように自分のコンテナごと削除してください
 
 （例: rm -rf /usr/share/wordpress/wp-content/uploads/student1031-sjc01-container）
