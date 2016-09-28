@@ -82,7 +82,7 @@ SoftLayer上では、WindowsやLinux、FreeBSD等様々なサーバOSが動く�
 ![](images/server/provisioning.png)  
 [Provisioning Scripts]では，インストール時に自動で実行するスクリプトを指定できます．ここでは，ファイアウォールの設定を自動で行う為にURL 1に以下のURLを指定します．
 
-    https://shiro.ma/sl/iptables.sh **適当に変更してください**
+    https://raw.githubusercontent.com/kkitase/softlayer-handson/master/scripts/iptables.sh
 
 [Host and Domain Names]のセクションでホスト名とドメイン名を入力してください。このホスト名とドメイン名は実在しない仮の値でかまいません。実際にDNSに対しての操作は行われず、サーバを認識するためだけに用いられます。空欄だとオーダーが確定できません。
 
@@ -195,7 +195,8 @@ Provisioning Scriptにより，サーバのデプロイ時に自動的にiptable
 
     Chain INPUT (policy DROP)
     target     prot opt source               destination
-    ACCEPT     all  --  anywhere             anywhere            state RELATED,ESTABLISHED
+    ACCEPT     all  --  anywhere             anywhere            
+    RELATED,ESTABLISHED
     ACCEPT     icmp --  anywhere             anywhere
     ACCEPT     tcp  --  anywhere             anywhere            tcp dpt:ftp-data
     ACCEPT     tcp  --  anywhere             anywhere            tcp dpt:ftp
