@@ -14,7 +14,7 @@ iptables -A INPUT -p icmp -j ACCEPT
 
 # accept connection to some server
 iptables -A INPUT -p tcp -m tcp --dport 22 -j ACCEPT # ssh
-iptables -A INPUT -p tcp -m tcp --dport 80 -j ACCEPT # http
+#iptables -A INPUT -p tcp -m tcp --dport 80 -j ACCEPT # http
 iptables -A INPUT -p tcp -m tcp --dport 443 -j ACCEPT # https
 iptables -A INPUT -p tcp -m tcp --dport 25 -j ACCEPT # smtp
 iptables -A INPUT -p tcp -m tcp --dport 465 -j ACCEPT # smtps
