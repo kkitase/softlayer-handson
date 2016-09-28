@@ -193,6 +193,7 @@ iptablesは，Linux標準のネットワーク・セキュリティツールで�
 #### iptablesの起動確認
 Provisioning Scriptにより，サーバのデプロイ時に自動的にiptablesがセットアップされています．デフォルトでは、20 (ftpデータ), 21 (ftp制御), 22 (SSH), 25 (SMTP), 53 (DNS), 110 (POP3), 143 (IMAP), 443 (HTTPS), 3306 (MySQL) の通信を許可しています。
 
+    # iptables -L
     Chain INPUT (policy DROP)
     target     prot opt source               destination
     ACCEPT     all  --  anywhere             anywhere            
