@@ -346,7 +346,7 @@ OKを押してターミナル画面が表示されたら，鍵交換方式での
 #### パスワード認証の拒否
 鍵交換方式でのログイン設定を行ったら，パスワードでのログイン要求を拒否します．
 
-    # nano -w /etc/ssh/sshd_config
+    # vi /etc/ssh/sshd_config
     (45行目付近)
     RSAAuthentication yes # コメントアウトを解除
     PubkeyAuthentication yes # コメントアウトを解除
