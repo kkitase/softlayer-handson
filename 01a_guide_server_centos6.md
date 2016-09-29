@@ -326,8 +326,35 @@ iptablesが適切に設定されていれば，Apache2 Test Pangeが表示され
 
     http://<作成したサーバのPublic IP>/softlayer
 
-秘密鍵が表示されたら，Control + Sを押して秘密鍵をローカルPCに保存します．
+秘密鍵が表示されたら，Control + Sを押して秘密鍵をローカルPCに保存します。
 
+再度、HTTPポートをクローズします。
+
+    # iptables -L --line-numbers
+    Chain INPUT (policy DROP)
+    num  target     prot opt source               destination
+    1    ACCEPT     all  --  anywhere             anywhere            state     RELATED,ESTABLISHED
+    2    ACCEPT     icmp --  anywhere             anywhere
+    3    ACCEPT     tcp  --  anywhere             anywhere            tcp dpt:ftp-data
+    4    ACCEPT     tcp  --  anywhere             anywhere            tcp dpt:ftp
+    5    ACCEPT     tcp  --  anywhere             anywhere            tcp dpt:ssh
+    6    ACCEPT     tcp  --  anywhere             anywhere            tcp dpt:smtp
+    7    ACCEPT     tcp  --  anywhere             anywhere            tcp dpt:domain
+    8    ACCEPT     udp  --  anywhere             anywhere            udp dpt:domain
+    9    ACCEPT     tcp  --  anywhere             anywhere            tcp dpt:pop3
+    10   ACCEPT     tcp  --  anywhere             anywhere            tcp dpt:imap
+    11   ACCEPT     tcp  --  anywhere             anywhere            tcp dpt:https
+    12   ACCEPT     tcp  --  anywhere             anywhere            tcp dpt:mysql
+    13   ACCEPT     tcp  --  anywhere             anywhere            tcp dpt:http
+
+    Chain FORWARD (policy DROP)
+    num  target     prot opt source               destination
+
+    Chain OUTPUT (policy ACCEPT)
+    num  target     prot opt source               destination
+    1    ACCEPT     all  --  anywhere             anywhere
+    # iptables -D INPUT 13
+    
 鍵を保存したら，次は鍵を利用したサーバへのログインを行います.
 Tera Termを起動し，サーバのPublic IPアドレスを入力してOKを押します．
 
