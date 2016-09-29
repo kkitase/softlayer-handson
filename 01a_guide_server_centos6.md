@@ -301,7 +301,7 @@ iptablesが適切に設定されていれば，Apache2 Test Pangeが表示され
 #### 鍵ペアの生成
 鍵交換方式を利用する為には，パスワード付きの公開鍵/秘密鍵ペアを作成して適切に配置・設定する必要があります．まずは鍵ペアを作成します．
 
-    # mkdir .
+    # mkdir .ssh
     # chmod 600 .ssh
     # ssh-keygen –f .ssh/softlayer #入力した文字は表示されません
 
