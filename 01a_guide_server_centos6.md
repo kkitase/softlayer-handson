@@ -398,7 +398,7 @@ PythonのセットアップにはPyEnvを使用します．インストールの
 
 ```
 # yum -y groupinstall "Development Tools"
-# yum -y install libffi-devel openssl-devel
+# yum -y install libffi-devel openssl-devel zlib-devel bzip2 bzip2-devel readline-devel sqlite sqlite-devel
 # curl -L https://raw.githubusercontent.com/yyuu/pyenv-installer/master/bin/pyenv-installer | bash
 # export PATH="/root/.pyenv/bin:$PATH"
 # eval "$(pyenv init -)"
